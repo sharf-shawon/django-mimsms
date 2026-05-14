@@ -1,50 +1,55 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+- Version change: [INITIAL] → 1.0.0
+- List of modified principles:
+  - [PRINCIPLE_1_NAME] → I. Strict Type Safety & Pydantic Validation
+  - [PRINCIPLE_2_NAME] → II. 100% Coverage & Network Isolation
+  - [PRINCIPLE_3_NAME] → III. Django-Idiomatic Integration
+  - [PRINCIPLE_4_NAME] → IV. Efficient Asynchronous Transport
+  - [PRINCIPLE_5_NAME] → V. Minimalistic & Extensible Design
+- Added sections: Core Principles, Governance
+- Removed sections: None
+- Templates requiring updates (✅ updated / ⚠ pending):
+  - .specify/templates/plan-template.md ✅
+  - .specify/templates/spec-template.md ✅ (Standard alignment)
+  - .specify/templates/tasks-template.md ✅ (Standard alignment)
+- Follow-up TODOs: None
+-->
+
+# django-mimsms Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Strict Type Safety & Pydantic Validation
+The codebase MUST be fully typed and pass `mypy` strict checks. All API request and response data MUST be validated using Pydantic v2 models to ensure structural integrity and early error detection. Follow PEP 8 and use `ruff` for consistent formatting and linting.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+**Rationale**: Ensures maintainability, reduces runtime errors, and provides a clear contract for API interactions.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. 100% Coverage & Network Isolation
+Every public method and edge case MUST be tested with `pytest`. 100% line and branch coverage is NON-NEGOTIABLE and enforced by CI. Tests MUST NOT make external network calls; use `respx` for deterministic HTTP mocking.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**Rationale**: Guarantees reliability and prevents regressions without dependency on third-party API availability.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Django-Idiomatic Integration
+Provide a consistent experience for both Django and plain Python users. Configuration MUST be loadable from Django settings, environment variables, or explicit constructor arguments. Exceptions MUST follow a clear, documented hierarchy (e.g., `MiMSMSException`).
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Rationale**: Minimizes friction for developers and ensures predictable behavior across different deployment environments.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Efficient Asynchronous Transport
+Use `httpx` for all HTTP communication to support efficient, non-blocking requests. The package MUST be safe for use in background tasks and high-concurrency environments. Avoid import-time side effects and global mutable state.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**Rationale**: Optimizes resource usage and ensures the package scales with the host application.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Minimalistic & Extensible Design
+Keep the package focused on the MiMSMS API. Do not add unnecessary dependencies or complex abstractions. Follow the `src/` layout for clean module boundaries and ease of extension for future API endpoints.
+
+**Rationale**: Lowers the barrier for contributions and simplifies long-term maintenance.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+Constitution v1.0.0 supersedes all previous practices. All PRs MUST pass CI (Lint, Types, Tests). Versioning follows SemVer. Amendments require a version bump in this document.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+1. **Compliance**: All code changes must align with core principles.
+2. **Review**: Peer reviews should explicitly check for adherence to these standards.
+3. **Evolution**: Principles can be updated as the project scales, provided they maintain or improve quality.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-05-14 | **Last Amended**: 2026-05-14

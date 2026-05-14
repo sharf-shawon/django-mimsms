@@ -40,7 +40,11 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **I. Strict Type Safety**: Plan includes full typing and Pydantic validation?
+- [ ] **II. 100% Coverage**: Plan includes test cases for all branches/edge cases?
+- [ ] **III. Network Isolation**: All tests use `respx` or equivalent mocking (no live network)?
+- [ ] **IV. Django Integration**: Configuration supports Django settings and plain Python?
+- [ ] **V. Async Support**: Implementation uses `httpx` for non-blocking I/O?
 
 ## Project Structure
 
