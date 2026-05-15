@@ -11,7 +11,7 @@ class MiMSMSBaseRequest(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     username: NonEmptyString = Field(..., alias="UserName")
-    apikey: NonEmptyString = Field(..., alias="Apikey")
+    apikey: NonEmptyString = Field(..., alias="ApiKey")
 
 
 class MiMSMSResponse(BaseModel):
@@ -22,7 +22,7 @@ class MiMSMSResponse(BaseModel):
     status_code: int = Field(..., alias="statusCode")
     status: str = Field(..., alias="status")
     trxn_id: str | None = Field(None, alias="trxnId")
-    response_result: str = Field(..., alias="responseResult")
+    response_result: str | None = Field(None, alias="responseResult")
 
 
 class SingleSmsRequest(MiMSMSBaseRequest):
@@ -39,6 +39,7 @@ class SingleSmsRequest(MiMSMSBaseRequest):
 
 class BulkSmsRequest(SingleSmsRequest):
     """Payload for sending one message to many recipients."""
+
     pass
 
 
@@ -56,12 +57,14 @@ class DynamicSmsRequest(MiMSMSBaseRequest):
 
     model_config = ConfigDict(populate_by_name=True)
 
+    sender_name: NonEmptyString = Field(..., alias="SenderName")
     sms_data: list[DynamicSmsItem] = Field(..., alias="SmsData")
     transaction_type: str = Field("D", alias="TransactionType")
 
 
 class BalanceResponse(MiMSMSResponse):
     """Response model for balance check."""
+
     pass
 
 
@@ -70,7 +73,16 @@ class DlrRequest(MiMSMSBaseRequest):
 
     model_config = ConfigDict(populate_by_name=True)
 
+    mobile_number: NonEmptyString = Field(..., alias="MobileNumber")
     trxn_id: NonEmptyString = Field(..., alias="trxnId")
+
+
+class DlrResponse(MiMSMSResponse):
+    """Response model for delivery report check."""
+
+    operator_status: str | None = Field(None, alias="operatorStatus")
+    dlr_code: str | None = Field(None, alias="dlrCode")
+    receiver_mobile: str | None = Field(None, alias="receiverMobile")
 
 
 class ErrorResponse(BaseModel):

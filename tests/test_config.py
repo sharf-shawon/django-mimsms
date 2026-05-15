@@ -2,11 +2,7 @@ from django_mimsms.config import MiMSMSConfig
 
 
 def test_mimsms_config_defaults():
-    config = MiMSMSConfig(
-        username="user",
-        apikey="key",
-        sender_name="SENDER"
-    )
+    config = MiMSMSConfig(username="user", apikey="key", sender_name="SENDER")
     assert config.username == "user"
     assert config.apikey == "key"
     assert config.sender_name == "SENDER"
@@ -26,7 +22,7 @@ def test_mimsms_config_overrides():
         timeout=10.0,
         verify_ssl=False,
         default_transaction_type="P",
-        campaign_id="CAMP123"
+        campaign_id="CAMP123",
     )
     assert config.base_url == "https://alt.example.com"
     assert config.timeout == 10.0

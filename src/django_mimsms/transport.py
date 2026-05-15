@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, cast
 
 import httpx
 from pydantic import ValidationError
@@ -10,7 +10,6 @@ from django_mimsms.exceptions import (
     MiMSMSResponseParseError,
     MiMSMSTransportError,
 )
-from django_mimsms.models import MiMSMSResponse
 
 
 class Transport:
@@ -40,7 +39,7 @@ class Transport:
         path: str,
         json: dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> MiMSMSResponse:
+    ) -> dict[str, Any]:
         """Perform a synchronous request."""
         try:
             response = self._client.request(method, path, json=json, params=params)
@@ -54,7 +53,7 @@ class Transport:
         path: str,
         json: dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> MiMSMSResponse:
+    ) -> dict[str, Any]:
         """Perform an asynchronous request."""
         try:
             response = await self._async_client.request(method, path, json=json, params=params)
@@ -62,7 +61,7 @@ class Transport:
         except httpx.HTTPError as e:
             raise MiMSMSTransportError(f"HTTP transport error: {str(e)}") from e
 
-    def _handle_response(self, response: httpx.Response) -> MiMSMSResponse:
+    def _handle_response(self, response: httpx.Response) -> dict[str, Any]:
         """Parse and handle the API response."""
         if not (200 <= response.status_code < 300):
             raise MiMSMSHTTPError(
@@ -72,19 +71,18 @@ class Transport:
             )
 
         try:
-            data = response.json()
-            mimsms_response = MiMSMSResponse.model_validate(data)
+            data = cast(dict[str, Any], response.json())
+            # Basic validation to check for API-level errors
+            if "statusCode" in data:
+                sc = int(data["statusCode"])
+                if sc not in [200, 100]:
+                    raise MiMSMSAPIError(
+                        data.get("responseResult", data.get("status", "Unknown Error")),
+                        status_code=sc,
+                        trxn_id=data.get("trxnId"),
+                    )
 
-            # Functional error check (status codes like 401, 208 returned with HTTP 200)
-            # MiMSMS usually returns success as 200 or 100
-            if mimsms_response.status_code not in [200, 100]:
-                raise MiMSMSAPIError(
-                    mimsms_response.response_result,
-                    status_code=mimsms_response.status_code,
-                    trxn_id=mimsms_response.trxn_id,
-                )
-
-            return mimsms_response
+            return data
         except (ValueError, ValidationError) as e:
             raise MiMSMSResponseParseError(f"Failed to parse API response: {str(e)}") from e
 

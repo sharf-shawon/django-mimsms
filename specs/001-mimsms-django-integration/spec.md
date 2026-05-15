@@ -39,18 +39,18 @@ As a developer, I want to send a single message to multiple recipients at once s
 
 ---
 
-### User Story 3 - Balance and Delivery Status Lookup (Priority: P2)
+### User Story 4 - Extensive Live Test Script (Priority: P2)
 
-As a developer, I want to check my account balance and the delivery status of sent messages so that I can monitor usage and verify delivery.
+As a developer, I want a comprehensive live test script that verifies all API endpoints against the real MiMSMS server so that I can confirm production readiness.
 
-**Why this priority**: Operational visibility and monitoring.
+**Why this priority**: Operational verification and troubleshooting.
 
-**Independent Test**: Can be tested by calling `check_balance` and `check_dlr` and verifying the parsed response models.
+**Independent Test**: Running the script should prompt for credentials, execute all API methods, and produce a summarized report of success/failure for each endpoint.
 
 **Acceptance Scenarios**:
 
-1. **Given** valid credentials, **When** I call `check_balance`, **Then** the current account balance is returned as a structured value.
-2. **Given** a valid `trxnId`, **When** I call `check_dlr`, **Then** the delivery status (e.g., Delivered, Undelivered) is returned.
+1. **Given** valid credentials and a receiver number, **When** I run the script, **Then** it tests Balance (POST/GET), SMS (POST/GET), Bulk (POST/GET), Dynamic SMS, and DLR lookup.
+2. **Given** missing credentials, **When** I run the script, **Then** it prompts the user to enter them.
 
 ---
 

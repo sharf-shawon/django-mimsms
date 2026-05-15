@@ -1,44 +1,42 @@
-# Implementation Plan: MiMSMS Django Integration
+# Implementation Plan: MiMSMS Django Integration - Live Test Extension
 
 **Branch**: `001-mimsms-django-package` | **Date**: 2026-05-14 | **Spec**: specs/001-mimsms-django-integration/spec.md
 
-**Input**: Feature specification from `/specs/001-mimsms-django-integration/spec.md`
-
-**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
+**Input**: User request for extensive live test script.
 
 ## Summary
 
-Build a production-ready Django package `django-mimsms` for the MiMSMS bulk SMS API. The package will support both plain Python and Django environments, featuring strict Pydantic validation, httpx for async transport, and 100% test coverage with respx for network isolation.
+Expand `verify_mimsms.py` into a robust diagnostic tool that verifies every API endpoint. The script will be interactive, prompting for necessary credentials and parameters, and will generate a structured report. To minimize cost, we will primarily use balance checks and send only one actual SMS payload if the user provides a receiver number.
 
 ## Technical Context
 
 **Language/Version**: Python 3.12
 
-**Primary Dependencies**: Django 5.x, httpx, pydantic v2
+**Primary Dependencies**: `django-mimsms` (local source), `rich` (for report formatting)
 
-**Storage**: N/A (Stateless API Client)
+**Storage**: N/A
 
-**Testing**: pytest, pytest-cov, respx
+**Testing**: Live network calls to `api.mimsms.com`
 
-**Target Platform**: Django/Python environments
+**Target Platform**: CLI
 
-**Project Type**: library/django-package
+**Project Type**: tool/diagnostic
 
-**Performance Goals**: Efficient non-blocking I/O using httpx
+**Performance Goals**: N/A
 
-**Constraints**: 100% line/branch coverage, strict type checking (mypy), ruff linting
+**Constraints**: Must not store credentials; must clearly indicate which methods are being tested.
 
-**Scale/Scope**: Full implementation of documented MiMSMS endpoints
+**Scale/Scope**: Covers all 7+ endpoints identified in research.md.
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- [x] **I. Strict Type Safety**: Plan includes full typing and Pydantic validation?
-- [x] **II. 100% Coverage**: Plan includes test cases for all branches/edge cases?
-- [x] **III. Network Isolation**: All tests use `respx` or equivalent mocking (no live network)?
-- [x] **IV. Django Integration**: Configuration supports Django settings and plain Python?
-- [x] **V. Async Support**: Implementation uses `httpx` for non-blocking I/O?
+- [x] **I. Strict Type Safety**: Script will use typed client and validated models?
+- [x] **II. 100% Coverage**: N/A for live test script, but logic will be verified?
+- [x] **III. Network Isolation**: EXEMPT (this is specifically a live test)?
+- [x] **IV. Django Integration**: Will demonstrate `get_client()` and direct `MiMSMSClient`?
+- [x] **V. Async Support**: Will test both sync and async methods?
 
 ## Project Structure
 
@@ -46,39 +44,20 @@ Build a production-ready Django package `django-mimsms` for the MiMSMS bulk SMS 
 
 ```text
 specs/001-mimsms-django-integration/
-├── plan.md              # This file
-├── research.md          # Phase 0 output
-├── data-model.md        # Phase 1 output
-├── quickstart.md        # Phase 1 output
-├── contracts/           # Phase 1 output
-└── tasks.md             # Phase 2 output
+├── plan.md              # Updated
+├── research.md          # Existing
+├── data-model.md        # Existing
+├── quickstart.md        # Existing
+└── tasks.md             # To be updated
 ```
 
 ### Source Code (repository root)
 
 ```text
-src/
-└── django_mimsms/
-    ├── __init__.py
-    ├── client.py        # Core API client
-    ├── config.py        # Configuration management
-    ├── django.py        # Django integration (settings, factory)
-    ├── exceptions.py    # Custom exception hierarchy
-    ├── models.py        # Pydantic request/response models
-    ├── service.py       # High-level service wrapper
-    ├── transport.py     # httpx transport abstraction
-    └── version.py       # Package version
-
-tests/
-├── conftest.py          # Shared fixtures
-├── test_client.py
-├── test_config.py
-├── test_django.py
-├── test_models.py
-└── test_transport.py
+verify_mimsms.py        # Interactive diagnostic script
 ```
 
-**Structure Decision**: Single project using `src/` layout as requested in the original requirements.
+**Structure Decision**: Maintain root location for ease of execution without installation.
 
 ## Complexity Tracking
 
@@ -86,4 +65,4 @@ tests/
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| None | N/A | N/A |
+| III. Network Isolation | This is a live verification tool. | Mocking would defeat the purpose. |

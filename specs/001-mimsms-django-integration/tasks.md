@@ -113,8 +113,18 @@ description: "Task list template for feature implementation"
 **Checkpoint**: All user stories should now be independently functional
 
 ---
+## Phase 6: Extensive Live Test Script (Priority: P2)
+
+**Goal**: Implement an interactive diagnostic tool to verify all API endpoints against the live MiMSMS server.
+
+**Independent Test**: Running `python verify_mimsms.py` should prompt for details and display a success/failure table for all methods.
+
+- [x] T033 [P] [US4] Implement interactive credential prompts in `verify_mimsms.py`
+- [x] T034 [US4] Implement test runner logic for all 7+ endpoints in `verify_mimsms.py`
+- [x] T035 [US4] Add `rich` table reporting for final status summary in `verify_mimsms.py`
 
 ## Phase N: Polish & Cross-Cutting Concerns
+
 
 **Purpose**: Improvements that affect multiple user stories
 

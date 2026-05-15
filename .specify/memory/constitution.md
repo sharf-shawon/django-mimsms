@@ -1,12 +1,13 @@
 <!--
 Sync Impact Report:
-- Version change: [INITIAL] → 1.0.0
+- Version change: [INITIAL] → 1.1.0
 - List of modified principles:
   - [PRINCIPLE_1_NAME] → I. Strict Type Safety & Pydantic Validation
   - [PRINCIPLE_2_NAME] → II. 100% Coverage & Network Isolation
   - [PRINCIPLE_3_NAME] → III. Django-Idiomatic Integration
   - [PRINCIPLE_4_NAME] → IV. Efficient Asynchronous Transport
   - [PRINCIPLE_5_NAME] → V. Minimalistic & Extensible Design
+  - [NEW] → VI. Source of Truth for API Implementation
 - Added sections: Core Principles, Governance
 - Removed sections: None
 - Templates requiring updates (✅ updated / ⚠ pending):
@@ -45,11 +46,21 @@ Keep the package focused on the MiMSMS API. Do not add unnecessary dependencies 
 
 **Rationale**: Lowers the barrier for contributions and simplifies long-term maintenance.
 
+### VI. Source of Truth for API Implementation
+All API implementations MUST align with the official MiMSMS documentation. The following URLs are the primary sources of truth:
+- https://www.mimsms.com/api-documentation
+- https://apidoc.mimsms.com/
+- https://github.com/mimsms/mimsms-api-docs
+
+Any ambiguity in implementation MUST be resolved by referring to these URLs as the primary sources of truth.
+
+**Rationale**: Ensures consistency with the provider's standards and reduces maintenance overhead caused by guessing or outdated documentation.
+
 ## Governance
-Constitution v1.0.0 supersedes all previous practices. All PRs MUST pass CI (Lint, Types, Tests). Versioning follows SemVer. Amendments require a version bump in this document.
+Constitution v1.1.0 supersedes all previous practices. All PRs MUST pass CI (Lint, Types, Tests). Versioning follows SemVer. Amendments require a version bump in this document.
 
 1. **Compliance**: All code changes must align with core principles.
 2. **Review**: Peer reviews should explicitly check for adherence to these standards.
 3. **Evolution**: Principles can be updated as the project scales, provided they maintain or improve quality.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-14 | **Last Amended**: 2026-05-14
+**Version**: 1.1.0 | **Ratified**: 2026-05-14 | **Last Amended**: 2026-05-15
