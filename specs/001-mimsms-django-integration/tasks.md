@@ -22,11 +22,11 @@ description: "Task list template for feature implementation"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Initialize Python package with `pyproject.toml` supporting build, pytest, and ruff
-- [ ] T002 Setup `.github/workflows/ci.yml` to enforce 100% coverage and strict type checking
-- [ ] T003 Create `src/django_mimsms/__init__.py` and `src/django_mimsms/version.py`
-- [ ] T004 Create custom exception hierarchy in `src/django_mimsms/exceptions.py`
-- [ ] T005 Create `tests/conftest.py` with respx HTTP mocking configuration
+- [x] T001 Initialize Python package with `pyproject.toml` supporting build, pytest, and ruff
+- [x] T002 Setup `.github/workflows/ci.yml` to enforce 100% coverage and strict type checking
+- [x] T003 Create `src/django_mimsms/__init__.py` and `src/django_mimsms/version.py`
+- [x] T004 Create custom exception hierarchy in `src/django_mimsms/exceptions.py`
+- [x] T005 Create `tests/conftest.py` with respx HTTP mocking configuration
 
 ---
 
@@ -36,14 +36,14 @@ description: "Task list template for feature implementation"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Implement configuration model `MiMSMSConfig` in `src/django_mimsms/config.py` using Pydantic
-- [ ] T007 Add unit tests for `MiMSMSConfig` (env vars, default values) in `tests/test_config.py`
-- [ ] T008 Implement `MiMSMSResponse` and API Error Models in `src/django_mimsms/models.py`
-- [ ] T009 Implement `httpx` based `Transport` abstraction in `src/django_mimsms/transport.py`
-- [ ] T010 Add unit tests for `Transport` in `tests/test_transport.py` (mocking with respx)
-- [ ] T011 Create base `MiMSMSClient` class in `src/django_mimsms/client.py` handling authentication
-- [ ] T012 Implement Django settings loader and `get_client()` factory in `src/django_mimsms/django.py`
-- [ ] T013 Add unit tests for Django integration in `tests/test_django.py`
+- [x] T006 Implement configuration model `MiMSMSConfig` in `src/django_mimsms/config.py` using Pydantic
+- [x] T007 Add unit tests for `MiMSMSConfig` (env vars, default values) in `tests/test_config.py`
+- [x] T008 Implement `MiMSMSResponse` and API Error Models in `src/django_mimsms/models.py`
+- [x] T009 Implement `httpx` based `Transport` abstraction in `src/django_mimsms/transport.py`
+- [x] T010 Add unit tests for `Transport` in `tests/test_transport.py` (mocking with respx)
+- [x] T011 Create base `MiMSMSClient` class in `src/django_mimsms/client.py` handling authentication
+- [x] T012 Implement Django settings loader and `get_client()` factory in `src/django_mimsms/django.py`
+- [x] T013 Add unit tests for Django integration in `tests/test_django.py`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -59,14 +59,14 @@ description: "Task list template for feature implementation"
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T014 [P] [US1] Write test for successful single SMS sending in `tests/test_client.py`
-- [ ] T015 [P] [US1] Write test for single SMS validation failure (invalid number) in `tests/test_client.py`
+- [x] T014 [P] [US1] Write test for successful single SMS sending in `tests/test_client.py`
+- [x] T015 [P] [US1] Write test for single SMS validation failure (invalid number) in `tests/test_client.py`
 
 ### Implementation for User Story 1
 
-- [ ] T016 [P] [US1] Create `SingleSmsRequest` model in `src/django_mimsms/models.py`
-- [ ] T017 [US1] Implement `send_sms` method in `MiMSMSClient` (`src/django_mimsms/client.py`)
-- [ ] T018 [US1] Implement `send_sms_get` method in `MiMSMSClient` (`src/django_mimsms/client.py`)
+- [x] T016 [P] [US1] Create `SingleSmsRequest` model in `src/django_mimsms/models.py`
+- [x] T017 [US1] Implement `send_sms` method in `MiMSMSClient` (`src/django_mimsms/client.py`)
+- [x] T018 [US1] Implement `send_sms_get` method in `MiMSMSClient` (`src/django_mimsms/client.py`)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -80,14 +80,14 @@ description: "Task list template for feature implementation"
 
 ### Tests for User Story 2 (MANDATORY) ⚠️
 
-- [ ] T019 [P] [US2] Write tests for bulk SMS (list of numbers and comma-separated) in `tests/test_client.py`
-- [ ] T020 [P] [US2] Write tests for dynamic SMS sending in `tests/test_client.py`
+- [x] T019 [P] [US2] Write tests for bulk SMS (list of numbers and comma-separated) in `tests/test_client.py`
+- [x] T020 [P] [US2] Write tests for dynamic SMS sending in `tests/test_client.py`
 
 ### Implementation for User Story 2
 
-- [ ] T021 [P] [US2] Create `BulkSmsRequest`, `DynamicSmsRequest`, and `DynamicSmsItem` models in `src/django_mimsms/models.py`
-- [ ] T022 [US2] Implement `send_one_to_many` and `send_one_to_many_get` in `MiMSMSClient` (`src/django_mimsms/client.py`)
-- [ ] T023 [US2] Implement `send_dynamic_sms` in `MiMSMSClient` (`src/django_mimsms/client.py`)
+- [x] T021 [P] [US2] Create `BulkSmsRequest`, `DynamicSmsRequest`, and `DynamicSmsItem` model in `src/django_mimsms/models.py`
+- [x] T022 [US2] Implement `send_one_to_many` and `send_one_to_many_get` in `MiMSMSClient` (`src/django_mimsms/client.py`)
+- [x] T023 [US2] Implement `send_dynamic_sms` in `MiMSMSClient` (`src/django_mimsms/client.py`)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -101,14 +101,14 @@ description: "Task list template for feature implementation"
 
 ### Tests for User Story 3 (MANDATORY) ⚠️
 
-- [ ] T024 [P] [US3] Write tests for checking balance (POST and GET) in `tests/test_client.py`
-- [ ] T025 [P] [US3] Write tests for checking DLR status in `tests/test_client.py`
+- [x] T024 [P] [US3] Write tests for checking balance (POST and GET) in `tests/test_client.py`
+- [x] T025 [P] [US3] Write tests for checking DLR status in `tests/test_client.py`
 
 ### Implementation for User Story 3
 
-- [ ] T026 [P] [US3] Create `BalanceResponse` and DLR models in `src/django_mimsms/models.py`
-- [ ] T027 [US3] Implement `check_balance` and `check_balance_get` in `MiMSMSClient` (`src/django_mimsms/client.py`)
-- [ ] T028 [US3] Implement `check_dlr` in `MiMSMSClient` (`src/django_mimsms/client.py`)
+- [x] T026 [P] [US3] Create `BalanceResponse` and DLR models in `src/django_mimsms/models.py`
+- [x] T027 [US3] Implement `check_balance` and `check_balance_get` in `MiMSMSClient` (`src/django_mimsms/client.py`)
+- [x] T028 [US3] Implement `check_dlr` in `MiMSMSClient` (`src/django_mimsms/client.py`)
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -118,10 +118,10 @@ description: "Task list template for feature implementation"
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T029 [P] Complete `README.md` with usage examples
-- [ ] T030 Confirm 100% test coverage using `pytest --cov`
-- [ ] T031 Run type checking and linting `mypy src/` and `ruff check src/`
-- [ ] T032 Verify packaging build process with `python -m build`
+- [x] T029 [P] Complete `README.md` with usage examples
+- [x] T030 Confirm 100% test coverage using `pytest --cov`
+- [x] T031 Run type checking and linting `mypy src/` and `ruff check src/`
+- [x] T032 Verify packaging build process with `python -m build`
 
 ---
 
