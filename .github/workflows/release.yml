@@ -51,7 +51,7 @@ jobs:
         id: release
         uses: python-semantic-release/python-semantic-release@v9.8.2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN }}
 
       - name: Publish package distributions to PyPI
         if: steps.release.outputs.released == 'true'
