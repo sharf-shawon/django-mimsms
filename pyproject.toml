@@ -8,7 +8,7 @@ version = "0.1.0"
 authors = [
   { name="Mimsms Integration Team" },
 ]
-description = "A Django package for MiMSMS bulk SMS API integration"
+description = "Production-ready Django & Python package for MiMSMS.com bulk SMS API. Features async support, type safety, and seamless Bangladesh SMS gateway integration."
 readme = "README.md"
 requires-python = ">=3.12"
 keywords = [
@@ -67,7 +67,7 @@ version_toml = [
 branch = "main"
 upload_to_pypi = false
 upload_to_release = true
-build_command = "python -m build"
+build_command = "python -m pip install build && python -m build"
 
 [tool.ruff]
 line-length = 120
