@@ -1,1 +1,3 @@
-{"feature_directory": "specs/001-mimsms-django-integration"}
+{
+  "feature_directory": "specs/002-fix-github-release-failure"
+}
