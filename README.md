@@ -1,8 +1,12 @@
-# django-mimsms
+# django-mimsms: MiMSMS SMS API Integration for Django & Python
 
-A production-ready Django package for the MiMSMS bulk SMS API used in Bangladesh. Supports both plain Python and Django environments.
+[![PyPI version](https://img.shields.io/pypi/v/django-mimsms.svg)](https://pypi.org/project/django-mimsms/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI Status](https://github.com/mimsms/django-mimsms/actions/workflows/ci.yml/badge.svg)](https://github.com/mimsms/django-mimsms/actions)
 
-## Features
+Seamlessly integrate **MiMSMS.com SMS API** into your Django and Python applications. This package provides a robust, type-safe, and asynchronous client for sending SMS, bulk messages, and tracking delivery reports in Bangladesh.
+
+## Key Features
 
 - **Strict Type Safety**: Fully typed with `mypy` strict checks and Pydantic v2 validation.
 - **Async Support**: Efficient non-blocking I/O using `httpx`.
@@ -12,52 +16,104 @@ A production-ready Django package for the MiMSMS bulk SMS API used in Bangladesh
 
 ## Installation
 
+Install the package via `pip` or `uv`:
+
 ```bash
+# Using pip
 pip install django-mimsms
+
+# Using uv
+uv add django-mimsms
 ```
 
-## Django Setup
+## Django Integration
 
-1. Add the following to your `settings.py`:
+### 1. Add to `INSTALLED_APPS`
 
 ```python
+# settings.py
+INSTALLED_APPS = [
+    ...,
+    "django_mimsms",
+]
+```
+
+### 2. Configure Settings
+
+Add your MiMSMS credentials to your `settings.py`:
+
+```python
+# settings.py
+MIMSMS_API_KEY = "your_api_key"
+MIMSMS_SENDER_ID = "your_sender_id"
 MIMSMS_USERNAME = "your_username"
-MIMSMS_APIKEY = "your_apikey"
-MIMSMS_SENDER_NAME = "your_sender"
 ```
 
-2. Send an SMS:
+### 3. Usage
 
 ```python
-from django_mimsms import get_client
+from django_mimsms import send_sms
 
-client = get_client()
-response = client.send_sms(
-    number="8801700000000",
-    message="Hello from Django!"
+# Send a simple SMS
+response = send_sms(
+    to="88017XXXXXXXX",
+    message="Hello from Django!",
 )
-print(response.trxn_id)
+
+print(response.trxnId)
 ```
 
 ## Plain Python Usage
 
-```python
-from django_mimsms.client import MiMSMSClient
+If you're not using Django, you can use the `MiMSMSClient` directly:
 
-client = MiMSMSClient(
-    username="user",
-    apikey="key",
-    sender_name="SENDER"
-)
-balance = client.check_balance()
-print(f"Balance: {balance}")
+```python
+import asyncio
+from django_mimsms import MiMSMSClient
+
+async def main():
+    client = MiMSMSClient(
+        api_key="your_api_key",
+        username="your_username",
+        sender_id="your_sender_id"
+    )
+    
+    response = await client.send_sms(
+        to="88017XXXXXXXX",
+        message="Hello from Python!",
+    )
+    print(response.trxnId)
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
-## Async Usage
+## Advanced Features
+
+### Bulk SMS
+Send the same message to multiple recipients:
 
 ```python
-async with MiMSMSClient(...) as client:
-    response = await client.send_sms(...)
+from django_mimsms import send_bulk_sms
+
+send_bulk_sms(
+    numbers=["88017XXXXXXXX", "88018XXXXXXXX"],
+    message="Bulk message testing",
+)
+```
+
+### Dynamic SMS
+Send different messages to different recipients in one call:
+
+```python
+from django_mimsms import send_dynamic_sms
+
+messages = [
+    {"to": "88017XXXXXXXX", "message": "Hi Alice!"},
+    {"to": "88018XXXXXXXX", "message": "Hi Bob!"},
+]
+
+send_dynamic_sms(messages)
 ```
 
 ## License

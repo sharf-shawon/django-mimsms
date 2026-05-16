@@ -1,42 +1,42 @@
-# Implementation Plan: MiMSMS Django Integration - Live Test Extension
+# Implementation Plan: Automatic Versioning and Deployment
 
-**Branch**: `001-mimsms-django-package` | **Date**: 2026-05-14 | **Spec**: specs/001-mimsms-django-integration/spec.md
+**Branch**: `main` | **Date**: 2026-05-15 | **Spec**: /specs/001-mimsms-django-integration/spec.md
 
-**Input**: User request for extensive live test script.
+**Input**: Feature specification from `/specs/001-mimsms-django-integration/spec.md` and user request for automatic versioning, deployment, and SEO-optimized README.
 
 ## Summary
 
-Expand `verify_mimsms.py` into a robust diagnostic tool that verifies every API endpoint. The script will be interactive, prompting for necessary credentials and parameters, and will generate a structured report. To minimize cost, we will primarily use balance checks and send only one actual SMS payload if the user provides a receiver number.
+Implement a robust CI/CD pipeline using GitHub Actions to automate versioning and deployment of the `django-mimsms` package to PyPI upon successful test execution. Enhance the project's visibility and usability by generating an SEO-optimized README and project description, ensuring a seamless onboarding experience for both Django and plain Python developers.
 
 ## Technical Context
 
-**Language/Version**: Python 3.12
+**Language/Version**: Python 3.12+
 
-**Primary Dependencies**: `django-mimsms` (local source), `rich` (for report formatting)
+**Primary Dependencies**: `setuptools`, `build`, `twine`, `setuptools_scm` (candidate for versioning) or NEEDS CLARIFICATION
 
 **Storage**: N/A
 
-**Testing**: Live network calls to `api.mimsms.com`
+**Testing**: `pytest`, `pytest-django`, `pytest-cov`, `respx`
 
-**Target Platform**: CLI
+**Target Platform**: PyPI, GitHub Actions
 
-**Project Type**: tool/diagnostic
+**Project Type**: Python Library / Django Package
 
 **Performance Goals**: N/A
 
-**Constraints**: Must not store credentials; must clearly indicate which methods are being tested.
+**Constraints**: Must pass all tests (100% coverage) before deployment.
 
-**Scale/Scope**: Covers all 7+ endpoints identified in research.md.
+**Scale/Scope**: Automated release pipeline and documentation overhaul.
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- [x] **I. Strict Type Safety**: Script will use typed client and validated models?
-- [x] **II. 100% Coverage**: N/A for live test script, but logic will be verified?
-- [x] **III. Network Isolation**: EXEMPT (this is specifically a live test)?
-- [x] **IV. Django Integration**: Will demonstrate `get_client()` and direct `MiMSMSClient`?
-- [x] **V. Async Support**: Will test both sync and async methods?
+- [x] **I. Strict Type Safety**: Plan includes full typing and Pydantic validation? (Package already uses strict mypy)
+- [x] **II. 100% Coverage**: Plan includes test cases for all branches/edge cases? (Enforced by current pytest config)
+- [x] **III. Network Isolation**: All tests use `respx` or equivalent mocking (no live network)? (Enforced by constitution)
+- [x] **IV. Django Integration**: Configuration supports Django settings and plain Python? (Confirmed in spec)
+- [x] **V. Async Support**: Implementation uses `httpx` for non-blocking I/O? (Confirmed in spec)
 
 ## Project Structure
 
@@ -44,20 +44,27 @@ Expand `verify_mimsms.py` into a robust diagnostic tool that verifies every API 
 
 ```text
 specs/001-mimsms-django-integration/
-├── plan.md              # Updated
-├── research.md          # Existing
-├── data-model.md        # Existing
-├── quickstart.md        # Existing
-└── tasks.md             # To be updated
+├── plan.md              # This file
+├── research.md          # Phase 0 output
+├── data-model.md        # Phase 1 output (N/A for this feature, but part of workflow)
+├── quickstart.md        # Phase 1 output
+├── contracts/           # Phase 1 output (N/A for this feature)
+└── tasks.md             # Phase 2 output
 ```
 
 ### Source Code (repository root)
 
 ```text
-verify_mimsms.py        # Interactive diagnostic script
+.github/
+└── workflows/
+    ├── ci.yml           # Existing CI
+    └── release.yml      # New Release workflow
+
+README.md                # Updated for SEO and usage
+pyproject.toml           # Updated for versioning configuration
 ```
 
-**Structure Decision**: Maintain root location for ease of execution without installation.
+**Structure Decision**: Standard Python project structure with GitHub Actions for CI/CD.
 
 ## Complexity Tracking
 
@@ -65,4 +72,4 @@ verify_mimsms.py        # Interactive diagnostic script
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| III. Network Isolation | This is a live verification tool. | Mocking would defeat the purpose. |
+| None | | |

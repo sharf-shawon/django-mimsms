@@ -1,53 +1,39 @@
-# Research: MiMSMS Django Integration
+# Research: Automatic Versioning, Deployment, and SEO
 
-## MiMSMS API Analysis
+## Automatic Versioning and Deployment
 
-### Authentication
-- **Method**: Authentication via `UserName` and `Apikey` in request body (JSON) or query string (GET).
-- **Base URL**: `https://api.mimsms.com`
+### Decision: `python-semantic-release` (PSR)
+- **Rationale**: PSR automates the entire release process: version bumping, changelog generation, and PyPI publishing based on Conventional Commits. It integrates perfectly with GitHub Actions and ensures that versioning only happens after tests pass on the `main` branch.
+- **Alternatives considered**:
+  - `setuptools_scm`: Good for tag-based versioning but doesn't automate the bumping or changelog.
+  - Manual bumping: Error-prone and doesn't satisfy the "automatic" requirement.
 
-### Endpoints
-1.  **Single SMS (JSON)**: `POST /api/SmsSending/SMS`
-2.  **Bulk SMS (One-to-Many)**: `POST /api/SmsSending/OneToMany`
-3.  **Dynamic SMS (DSMS)**: `POST /api/SmsSending/DSMS`
-4.  **Single SMS (GET)**: `GET /api/SmsSending/Send`
-5.  **Bulk SMS (GET)**: `GET /api/SmsSending/SendOneToMany`
-6.  **Balance Check (JSON)**: `POST /api/SmsSending/balanceCheck`
-7.  **Balance Check (GET)**: `GET /api/SmsSending/balanceCheck`
+### Deployment: PyPI Trusted Publishing
+- **Rationale**: Modern, secure method using OpenID Connect (OIDC). Eliminates the need for storing PyPI tokens in GitHub Secrets.
+- **Workflow**:
+  1. Test job (Lints + Tests).
+  2. Release job (PSR) runs only if Test job succeeds and on `main` branch.
 
-### Request Models
-- **Common Fields**: `UserName`, `Apikey`
-- **SMS Fields**: `MobileNumber`, `SenderName`, `TransactionType` (T/P/D), `Message`, `CampaignId` (optional/mandatory for P)
-- **One-to-Many**: `MobileNumber` (comma separated or list)
-- **DSMS**: `SmsData` (list of `MobNumber` and `Message`)
+## SEO Optimization
 
-### Response Models
-- **Fields**: `statusCode`, `status`, `trxnId`, `responseResult`
-- **Error Codes**: 401 (Auth), 208 (Invalid Sender), 206 (Invalid Number), 216 (Insufficient Balance), etc.
+### Keywords
+- Primary: `django-mimsms`, `mimsms sms api`, `django sms integration`
+- Secondary: `bulk sms bangladesh`, `mimsms.com python`, `dynamic sms api`, `sms gateway django`
 
-## Technology Best Practices
+### Strategies
+- **README Title**: Use a descriptive title: `django-mimsms: MiMSMS SMS API Integration for Django & Python`.
+- **PyPI Description**: Ensure the first paragraph is keyword-rich and explains the value proposition clearly.
+- **Badges**: Use PyPI, License, and CI status badges to build trust.
+- **Metadata**: Populate `project.urls` in `pyproject.toml` (Documentation, Repository, Bug Tracker).
 
-### httpx Transport
-- **Decision**: Use `httpx.Client` (sync) and `httpx.AsyncClient` (async) via a shared transport layer.
-- **Rationale**: Original requirement specified `httpx`. Providing both sync and async capabilities ensures maximum flexibility.
+## Implementation Details
 
-### Django Settings Loader
-- **Decision**: Use a lazy settings loader in `django_mimsms.django`.
-- **Rationale**: Avoids import-time side effects. Provides a `get_client()` factory that initializes from `settings.MIMSMS_*`.
+### GitHub Actions Workflow
+- Name: `CI/CD`
+- Triggers: `push` to `main`, `pull_request` to `main`.
+- Jobs:
+    - `test`: Run `ruff`, `mypy`, `pytest`.
+    - `release`: Depends on `test`. Runs only on `main` branch. Uses `python-semantic-release/python-semantic-release@v9`.
 
-### Pydantic v2 Validation
-- **Decision**: Use `pydantic.BaseModel` with `Field` for alias mapping (e.g., `UserName` -> `username`).
-- **Rationale**: MiMSMS uses PascalCase in API, while Python prefers snake_case. Pydantic aliases handle this cleanly.
-
-### Testing with respx
-- **Decision**: Use `respx` to mock `httpx` calls.
-- **Rationale**: Lightweight and integrates perfectly with `pytest` and `httpx`. Ensures 100% network isolation.
-
-## Decision Log
-
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| Transport | httpx | Modern, async-ready, requested in requirements. |
-| Validation | Pydantic v2 | Robust, fast, excellent type support. |
-| Structure | src/ layout | Standard for modern Python packages. |
-| Mocking | respx | Native to httpx ecosystem. |
+### Versioning Setup
+- PSR requires `pyproject.toml` configuration to know where to bump the version (e.g., `src/django_mimsms/version.py`).
