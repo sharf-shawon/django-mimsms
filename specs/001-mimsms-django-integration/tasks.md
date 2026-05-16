@@ -1,181 +1,100 @@
----
-description: "Task list template for feature implementation"
----
-
-# Tasks: MiMSMS Django Integration
+# Tasks: Automatic Versioning and Deployment
 
 **Input**: Design documents from `/specs/001-mimsms-django-integration/`
 
-**Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
-
-**Tests**: Tests are MANDATORY per the project constitution. Every task list MUST include test-first implementation tasks for every user story to ensure 100% coverage and network isolation.
-
-**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
-
-## Format: `[ID] [P?] [Story] Description`
-
-- **[P]**: Can run in parallel (different files, no dependencies)
-- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
-- Include exact file paths in descriptions
+**Prerequisites**: plan.md, spec.md, research.md, quickstart.md, data-model.md
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-**Purpose**: Project initialization and basic structure
+**Purpose**: Project initialization for automatic versioning and deployment.
 
-- [x] T001 Initialize Python package with `pyproject.toml` supporting build, pytest, and ruff
-- [x] T002 Setup `.github/workflows/ci.yml` to enforce 100% coverage and strict type checking
-- [x] T003 Create `src/django_mimsms/__init__.py` and `src/django_mimsms/version.py`
-- [x] T004 Create custom exception hierarchy in `src/django_mimsms/exceptions.py`
-- [x] T005 Create `tests/conftest.py` with respx HTTP mocking configuration
+- [x] T001 Initialize `python-semantic-release` configuration in `pyproject.toml`
+- [x] T002 [P] Create `src/django_mimsms/version.py` to store the version string
 
 ---
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
+**Purpose**: Core configuration needed for versioning and CI/CD pipelines.
 
-**⚠️ CRITICAL**: No user story work can begin until this phase is complete
+- [x] T003 Configure `python-semantic-release` to track `src/django_mimsms/version.py` and `pyproject.toml`
+- [x] T004 [P] Create base `.github/workflows/release.yml` for the release pipeline
 
-- [x] T006 Implement configuration model `MiMSMSConfig` in `src/django_mimsms/config.py` using Pydantic
-- [x] T007 Add unit tests for `MiMSMSConfig` (env vars, default values) in `tests/test_config.py`
-- [x] T008 Implement `MiMSMSResponse` and API Error Models in `src/django_mimsms/models.py`
-- [x] T009 Implement `httpx` based `Transport` abstraction in `src/django_mimsms/transport.py`
-- [x] T010 Add unit tests for `Transport` in `tests/test_transport.py` (mocking with respx)
-- [x] T011 Create base `MiMSMSClient` class in `src/django_mimsms/client.py` handling authentication
-- [x] T012 Implement Django settings loader and `get_client()` factory in `src/django_mimsms/django.py`
-- [x] T013 Add unit tests for Django integration in `tests/test_django.py`
-
-**Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+**Checkpoint**: Infrastructure ready for story-specific implementation.
 
 ---
 
-## Phase 3: User Story 1 - Sending a single SMS (Priority: P1) 🎯 MVP
+## Phase 3: User Story 1 - SEO-Optimized Documentation (Priority: P1)
 
-**Goal**: As a developer, I want to send a single SMS to a recipient using the MiMSMS API from my Django application so that I can notify users of important events.
+**Goal**: Enhance package discoverability and provide clear usage instructions.
 
-**Independent Test**: Can be tested by calling the `send_sms` method with valid parameters and verifying the response against documented MiMSMS success fields.
+**Independent Test**: Verify `README.md` contains targeted keywords and renders correctly with all sections.
 
-### Tests for User Story 1 (MANDATORY) ⚠️
+- [x] T005 [P] [US1] Update `pyproject.toml` with SEO metadata (description, keywords, project URLs)
+- [x] T006 [P] [US1] Generate `README.md` incorporating content from `quickstart.md` and SEO keywords
+- [x] T007 [P] [US1] Add shields.io badges for PyPI, License, and CI status to `README.md`
 
-> **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
-
-- [x] T014 [P] [US1] Write test for successful single SMS sending in `tests/test_client.py`
-- [x] T015 [P] [US1] Write test for single SMS validation failure (invalid number) in `tests/test_client.py`
-
-### Implementation for User Story 1
-
-- [x] T016 [P] [US1] Create `SingleSmsRequest` model in `src/django_mimsms/models.py`
-- [x] T017 [US1] Implement `send_sms` method in `MiMSMSClient` (`src/django_mimsms/client.py`)
-- [x] T018 [US1] Implement `send_sms_get` method in `MiMSMSClient` (`src/django_mimsms/client.py`)
-
-**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
+**Checkpoint**: Documentation is SEO-optimized and ready for users.
 
 ---
 
-## Phase 4: User Story 2 - Bulk SMS Sending (Priority: P1)
+## Phase 4: User Story 2 - Automatic Versioning (Priority: P1)
 
-**Goal**: As a developer, I want to send a single message to multiple recipients at once so that I can perform bulk notifications efficiently.
+**Goal**: Automate version bumps and changelog generation using Conventional Commits.
 
-**Independent Test**: Can be tested by calling `send_one_to_many` with a list of numbers and verifying that the API request payload is correctly formatted.
+**Independent Test**: Verify that PSR can correctly calculate the next version via dry-run in CI.
 
-### Tests for User Story 2 (MANDATORY) ⚠️
+- [x] T008 [US2] Configure GitHub Actions permissions and environment for versioning in `.github/workflows/release.yml`
+- [x] T009 [US2] Implement version bumping and changelog generation steps in `.github/workflows/release.yml`
 
-- [x] T019 [P] [US2] Write tests for bulk SMS (list of numbers and comma-separated) in `tests/test_client.py`
-- [x] T020 [P] [US2] Write tests for dynamic SMS sending in `tests/test_client.py`
-
-### Implementation for User Story 2
-
-- [x] T021 [P] [US2] Create `BulkSmsRequest`, `DynamicSmsRequest`, and `DynamicSmsItem` model in `src/django_mimsms/models.py`
-- [x] T022 [US2] Implement `send_one_to_many` and `send_one_to_many_get` in `MiMSMSClient` (`src/django_mimsms/client.py`)
-- [x] T023 [US2] Implement `send_dynamic_sms` in `MiMSMSClient` (`src/django_mimsms/client.py`)
-
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
+**Checkpoint**: Versioning is automated on the main branch.
 
 ---
 
-## Phase 5: User Story 3 - Balance and Delivery Status Lookup (Priority: P2)
+## Phase 5: User Story 3 - Automatic Deployment (Priority: P1)
 
-**Goal**: As a developer, I want to check my account balance and the delivery status of sent messages so that I can monitor usage and verify delivery.
+**Goal**: Securely publish the package to PyPI upon successful tests and versioning.
 
-**Independent Test**: Can be tested by calling `check_balance` and `check_dlr` and verifying the parsed response models.
+**Independent Test**: Successful "publish" job run (verified via dry-run or test PyPI).
 
-### Tests for User Story 3 (MANDATORY) ⚠️
+- [x] T010 [P] [US3] Add OIDC Trusted Publishing permissions to `.github/workflows/release.yml`
+- [x] T011 [US3] Implement PyPI publication step in `.github/workflows/release.yml` dependent on test success
 
-- [x] T024 [P] [US3] Write tests for checking balance (POST and GET) in `tests/test_client.py`
-- [x] T025 [P] [US3] Write tests for checking DLR status in `tests/test_client.py`
-
-### Implementation for User Story 3
-
-- [x] T026 [P] [US3] Create `BalanceResponse` and DLR models in `src/django_mimsms/models.py`
-- [x] T027 [US3] Implement `check_balance` and `check_balance_get` in `MiMSMSClient` (`src/django_mimsms/client.py`)
-- [x] T028 [US3] Implement `check_dlr` in `MiMSMSClient` (`src/django_mimsms/client.py`)
-
-**Checkpoint**: All user stories should now be independently functional
+**Checkpoint**: Automated deployment pipeline is fully functional.
 
 ---
-## Phase 6: Extensive Live Test Script (Priority: P2)
 
-**Goal**: Implement an interactive diagnostic tool to verify all API endpoints against the live MiMSMS server.
+## Phase 6: Polish & Cross-Cutting Concerns
 
-**Independent Test**: Running `python verify_mimsms.py` should prompt for details and display a success/failure table for all methods.
-
-- [x] T033 [P] [US4] Implement interactive credential prompts in `verify_mimsms.py`
-- [x] T034 [US4] Implement test runner logic for all 7+ endpoints in `verify_mimsms.py`
-- [x] T035 [US4] Add `rich` table reporting for final status summary in `verify_mimsms.py`
-
-## Phase N: Polish & Cross-Cutting Concerns
-
-
-**Purpose**: Improvements that affect multiple user stories
-
-- [x] T029 [P] Complete `README.md` with usage examples
-- [x] T030 Confirm 100% test coverage using `pytest --cov`
-- [x] T031 Run type checking and linting `mypy src/` and `ruff check src/`
-- [x] T032 Verify packaging build process with `python -m build`
+- [x] T012 [P] Run `ruff` and `mypy` to ensure code quality standards are maintained
+- [x] T013 [P] Validate `README.md` rendering on GitHub and local preview
+- [x] T014 [P] Perform final metadata verification in `pyproject.toml`
 
 ---
 
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
+- **Phase 1 (Setup)**: No dependencies.
+- **Phase 2 (Foundational)**: Depends on Phase 1 completion.
+- **User Stories (Phase 3-5)**: Depend on Phase 2 completion.
+  - US1, US2, and US3 can proceed in parallel once Phase 2 is done.
+- **Phase 6 (Polish)**: Depends on all user stories being complete.
 
-- **Setup (Phase 1)**: No dependencies - can start immediately
-- **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all user stories
-- **User Stories (Phase 3+)**: All depend on Foundational phase completion
-  - User stories can then proceed in parallel (if staffed)
-  - Or sequentially in priority order (P1 → P2 → P3)
-- **Polish (Final Phase)**: Depends on all desired user stories being complete
-
-### User Story Dependencies
-
-- **User Story 1 (P1)**: Can start after Foundational (Phase 2)
-- **User Story 2 (P1)**: Can start after Foundational (Phase 2)
-- **User Story 3 (P2)**: Can start after Foundational (Phase 2)
-
-### Within Each User Story
-
-- Tests MUST be written and FAIL before implementation
-- Models before services
-- Services before endpoints
-- Core implementation before integration
-- Story complete before moving to next priority
+### Parallel Opportunities
+- T002, T004, T005, T006, T007, T010 are all parallelizable.
+- Once Phase 2 is complete, US1, US2, and US3 implementation can run in parallel if multiple developers are available.
 
 ---
 
 ## Implementation Strategy
 
-### MVP First (User Story 1 Only)
-
-1. Complete Phase 1: Setup
-2. Complete Phase 2: Foundational (CRITICAL - blocks all stories)
-3. Complete Phase 3: User Story 1
-4. **STOP and VALIDATE**: Test User Story 1 independently
-5. Deploy/demo if ready
+### MVP First (User Story 1 + 2)
+1. Complete Setup and Foundational phases.
+2. Implement US1 (Documentation) and US2 (Versioning).
+3. Verify versioning works before adding deployment.
 
 ### Incremental Delivery
-
-1. Complete Setup + Foundational → Foundation ready
-2. Add User Story 1 → Test independently → Deploy/Demo (MVP!)
-3. Add User Story 2 → Test independently → Deploy/Demo
-4. Add User Story 3 → Test independently → Deploy/Demo
-5. Each story adds value without breaking previous stories
+1. **Milestone 1**: Documentation optimized (US1).
+2. **Milestone 2**: Automatic versioning active (US2).
+3. **Milestone 3**: Full CI/CD with PyPI deployment (US3).
