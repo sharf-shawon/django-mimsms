@@ -35,10 +35,10 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/mimsms/django-mimsms"
-"Bug Tracker" = "https://github.com/mimsms/django-mimsms/issues"
-"Documentation" = "https://github.com/mimsms/django-mimsms#readme"
-"Repository" = "https://github.com/mimsms/django-mimsms"
+"Homepage" = "https://github.com/sharf-shawon/django-mimsms"
+"Bug Tracker" = "https://github.com/sharf-shawon/django-mimsms/issues"
+"Documentation" = "https://github.com/sharf-shawon/django-mimsms#readme"
+"Repository" = "https://github.com/sharf-shawon/django-mimsms"
 
 [project.optional-dependencies]
 test = [
@@ -59,6 +59,7 @@ dev = [
 
 
 [tool.semantic_release]
+vcs_provider = "github"
 version_variable = [
     "src/django_mimsms/version.py:__version__",
 ]
