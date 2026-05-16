@@ -1,42 +1,38 @@
 # Implementation Plan: Fix GitHub Release Failure
 
-**Branch**: `main` | **Date**: 2026-05-15 | **Spec**: specs/002-fix-github-release-failure/spec.md
-
-**Input**: Feature specification from `/specs/002-fix-github-release-failure/spec.md`
+**Branch**: `002-fix-github-release-failure` | **Date**: 2026-05-16 | **Spec**: [specs/002-fix-github-release-failure/spec.md]
 
 ## Summary
 
-Resolve the `git.exc.GitCommandError` (non-fast-forward) in the GitHub Actions release workflow. The primary fix involves ensuring the local runner state is perfectly synchronized with the remote `main` branch before `python-semantic-release` attempts to push version tags and commits. This will likely involve refining the `actions/checkout` configuration and potentially adding explicit git synchronization steps.
+The current GitHub Actions release workflow is failing during the Semantic Release step with a `GitCommandError` (non-fast-forward). This prevents version tagging and package publication. The goal is to synchronize the repository state before release and ensure the workflow has proper permissions and configuration to publish to PyPI.
 
 ## Technical Context
 
-**Language/Version**: GitHub Actions (YAML), Python 3.12+
+**Language/Version**: Python 3.12
 
-**Primary Dependencies**: `python-semantic-release` v9, `actions/checkout` v4
+**Primary Dependencies**: `httpx`, `pydantic`, `django`, `python-semantic-release`, `build`, `twine`
 
-**Storage**: GitHub Repository
+**Storage**: N/A
 
-**Testing**: GitHub Actions Workflow (manual trigger/push verification)
+**Testing**: `pytest`
 
-**Target Platform**: GitHub Actions
+**Target Platform**: PyPI
 
-**Project Type**: CI/CD / DevOps
+**Project Type**: Library
 
 **Performance Goals**: N/A
 
-**Constraints**: Must work within standard `GITHUB_TOKEN` permission scopes or require minimal additional configuration.
+**Constraints**: Must use GitHub Actions for CI/CD
 
-**Scale/Scope**: Repository-wide release automation.
+**Scale/Scope**: Automated release management for `django-mimsms` package
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
-
-- [x] **I. Strict Type Safety**: N/A for YAML/Config.
-- [x] **II. 100% Coverage**: N/A for infrastructure, but reliability is prioritized.
-- [x] **III. Network Isolation**: N/A - Release workflow *requires* network access to GitHub/PyPI.
-- [x] **IV. Django Integration**: N/A.
-- [x] **V. Async Support**: N/A.
+- [x] **I. Strict Type Safety**: Existing code uses mypy and pydantic.
+- [x] **II. 100% Coverage**: Existing tests target 100% coverage.
+- [x] **III. Network Isolation**: Tests use `respx`.
+- [x] **IV. Django Integration**: Supports Django settings.
+- [x] **V. Async Support**: Uses `httpx`.
 
 ## Project Structure
 
@@ -57,14 +53,18 @@ specs/002-fix-github-release-failure/
 ```text
 .github/
 └── workflows/
-    └── release.yml      # Target for fixes
-pyproject.toml           # PSR configuration
+    └── release.yml      # Release workflow configuration
+
+pyproject.toml           # Semantic release configuration
 ```
 
-**Structure Decision**: Infrastructure fix targeting existing GitHub Actions and Python configuration files.
+**Structure Decision**: Modifying `.github/workflows/release.yml` and `pyproject.toml` to fix the release process.
 
 ## Complexity Tracking
 
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| III. Network Isolation | Release *must* talk to GitHub/PyPI | No release possible without network |
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
