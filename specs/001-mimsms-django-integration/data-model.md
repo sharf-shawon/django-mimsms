@@ -1,57 +1,15 @@
-# Data Model: MiMSMS Django Integration
+# Data Model: Versioning and Release
 
-## Configuration Model
+This feature manages the project's versioning and release lifecycle.
 
-### MiMSMSConfig (Pydantic)
-- `username`: str
-- `apikey`: str
-- `sender_name`: str
-- `base_url`: str (default: `https://api.mimsms.com`)
-- `timeout`: float (default: 30.0)
-- `verify_ssl`: bool (default: True)
-- `default_transaction_type`: str (default: `T`)
-- `campaign_id`: Optional[str]
+## Entities
 
-## Request Models
+### Version
+- **Source of Truth**: `src/django_mimsms/version.py` and `pyproject.toml`
+- **Format**: Semantic Versioning (SemVer) `MAJOR.MINOR.PATCH`
+- **Management**: Managed by `python-semantic-release` (PSR) based on Conventional Commits.
 
-### SmsRequest (Base)
-- `UserName`: str (alias: `username`)
-- `Apikey`: str (alias: `apikey`)
-
-### SingleSmsRequest (SmsRequest)
-- `MobileNumber`: str
-- `SenderName`: str
-- `TransactionType`: str
-- `Message`: str
-- `CampaignId`: Optional[str]
-
-### BulkSmsRequest (SingleSmsRequest)
-- `MobileNumber`: str (comma-separated numbers)
-
-### DynamicSmsRequest (SmsRequest)
-- `SmsData`: List[DynamicSmsItem]
-- `TransactionType`: str (fixed: `D`)
-
-### DynamicSmsItem
-- `MobNumber`: str
-- `Message`: str
-
-## Response Models
-
-### MiMSMSResponse
-- `statusCode`: int
-- `status`: str
-- `trxnId`: Optional[str]
-- `responseResult`: str
-
-### BalanceResponse
-- `statusCode`: int
-- `status`: str
-- `responseResult`: str (containing balance)
-
-## Error Mapping (Exceptions)
-
-- `MiMSMSException`: Base exception
-- `MiMSMSAPIError`: Raised for statusCode != 200 or 100
-- `MiMSMSValidationError`: Pydantic validation failures
-- `MiMSMSTransportError`: httpx failures
+### Release
+- **Platform**: GitHub Releases & PyPI
+- **Artifacts**: Source Distribution (sdist) and Wheel (bdist_wheel)
+- **Metadata**: Generated from `pyproject.toml` and `README.md` (SEO Optimized)

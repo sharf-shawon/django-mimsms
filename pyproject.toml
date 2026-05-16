@@ -8,9 +8,18 @@ version = "0.1.0"
 authors = [
   { name="Mimsms Integration Team" },
 ]
-description = "A Django package for MiMSMS bulk SMS API integration"
+description = "Production-ready Django & Python package for MiMSMS.com bulk SMS API. Features async support, type safety, and seamless Bangladesh SMS gateway integration."
 readme = "README.md"
 requires-python = ">=3.12"
+keywords = [
+    "django-mimsms",
+    "mimsms sms api",
+    "django sms integration",
+    "bulk sms bangladesh",
+    "mimsms.com python",
+    "dynamic sms api",
+    "sms gateway django",
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -24,6 +33,12 @@ dependencies = [
     "pydantic>=2.6.0",
     "rich>=15.0.0",
 ]
+
+[project.urls]
+"Homepage" = "https://github.com/mimsms/django-mimsms"
+"Bug Tracker" = "https://github.com/mimsms/django-mimsms/issues"
+"Documentation" = "https://github.com/mimsms/django-mimsms#readme"
+"Repository" = "https://github.com/mimsms/django-mimsms"
 
 [project.optional-dependencies]
 test = [
@@ -39,7 +54,20 @@ dev = [
     "build",
     "rich>=13.0.0",
     "django-mimsms[test]",
+    "python-semantic-release>=9.0.0",
 ]
+
+[tool.semantic_release]
+version_variable = [
+    "src/django_mimsms/version.py:__version__",
+]
+version_toml = [
+    "pyproject.toml:project.version",
+]
+branch = "main"
+upload_to_pypi = false
+upload_to_release = true
+build_command = "python -m pip install build && python -m build"
 
 [tool.ruff]
 line-length = 120
