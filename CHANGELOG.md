@@ -14,7 +14,15 @@
 
 * feat: generate specification, implementation plan, and tasks for MiMSMS integration ([`cf0ae84`](https://github.com/sharf-shawon/django-mimsms/commit/cf0ae844aea61e99b424f252a7447ef8a49aaffa))
 
+### Fix
+
+* fix(ci): resolve non-fast-forward and 404 errors in release workflow ([`e52b119`](https://github.com/sharf-shawon/django-mimsms/commit/e52b11988935d720e5e26cf2fe420fdfe7f9d0cb))
+
 ### Unknown
+
+* Merge pull request #3 from sharf-shawon/002-fix-github-release-failure
+
+fix(ci): resolve non-fast-forward and 404 errors in release workflow ([`9f0f2c3`](https://github.com/sharf-shawon/django-mimsms/commit/9f0f2c3fae4a51ad4b7478a10a21b916c805a5bc))
 
 * Merge pull request #2 from sharf-shawon/001-mimsms-django-package
 
