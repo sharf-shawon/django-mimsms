@@ -57,6 +57,7 @@ dev = [
     "python-semantic-release>=9.0.0",
 ]
 
+
 [tool.semantic_release]
 version_variable = [
     "src/django_mimsms/version.py:__version__",
