@@ -1,34 +1,32 @@
 # Research: Fix GitHub Release Failure
 
-## Root Cause Analysis
+## Findings
 
-### non-fast-forward (rejected)
-- **Problem**: The GitHub Actions runner attempts to push a version bump and tag, but the remote `main` branch has commits that the runner doesn't have.
-- **Why it happens**:
-    - **Race Condition**: Another PR was merged or a commit was pushed to `main` between the time the `release` job started and when PSR tried to push.
-    - **Concurrency**: Multiple release workflows running in parallel.
-    - **Partial Checkout**: Although `fetch-depth: 0` is used, the checkout might be tracking a specific SHA rather than the branch head in some contexts.
+### 1. Git Push Failure (non-fast-forward)
+The error `git push ... rejected (non-fast-forward)` in GitHub Actions during `python-semantic-release` usually occurs because the runner's local branch is not perfectly aligned with the remote `main` branch at the time of push. This can happen if:
+- Other workflows or users pushed to `main` in the meantime.
+- The checkout process left the repository in a state where `main` is not properly tracked.
 
-### Permission Issues
-- **Problem**: User provided a classic token `GH_TOKEN` with "no added permissions".
-- **Impact**: `python-semantic-release` REQUIRES `contents: write` to push commits and tags. Without this, even a fast-forward push would fail (though likely with a different error message like "403 Forbidden" or "Protected branch hook declined").
+**Decision**: Ensure the workflow is running on the latest `main` and consider using a specific checkout configuration. However, `python-semantic-release` usually handles this. The most robust way is to ensure no other processes are modifying `main` and that the `GITHUB_TOKEN` has appropriate permissions.
 
-## Decisions
+**Alternatives Considered**: 
+- Using `git pull` before release (risky in CI).
+- Using a Personal Access Token (PAT) if branch protection is the issue.
 
-### 1. Concurrency Management
-- **Decision**: Move `concurrency` to the workflow level or ensure the job-level concurrency is strict.
-- **Rationale**: Prevents overlapping release attempts which are the primary source of non-fast-forward errors in automated pipelines.
+### 2. PyPI Publication (Trusted Publishers)
+To publish to PyPI without a manual token, the repository must be configured as a "Trusted Publisher" on PyPI.
+- **Rationale**: Security best practice, eliminates the need for managing secrets.
+- **Requirement**: `permissions: id-token: write` in the GitHub Action (already present).
 
-### 2. Git Synchronization
-- **Decision**: Ensure the branch is explicitly up-to-date before PSR runs.
-- **Action**: Although `python-semantic-release` action handles checkout, sometimes a manual `git pull origin main --rebase` or similar is needed if the environment has diverged. However, the PSR action usually handles this if configured correctly.
-- **Alternative**: Use the built-in `GITHUB_TOKEN` which is better integrated for internal actions, provided permissions are set.
+### 3. Semantic Release Configuration
+In `pyproject.toml`, `upload_to_pypi` is currently `false`. While the user is using a separate GitHub Action step for publishing, `python-semantic-release` might not build the artifacts if it thinks it doesn't need to.
+- **Decision**: Keep `upload_to_pypi = false` if using `pypa/gh-action-pypi-publish`, but ensure `build_command` is correct and artifacts are placed in `dist/`.
 
-### 3. Token Scopes
-- **Decision**: Advise the user that `GH_TOKEN` MUST have `repo` scope (for classic PAT) or `contents: write` (for fine-grained PAT).
-- **Alternative**: Prefer the built-in `GITHUB_TOKEN` with `permissions: contents: write` in the YAML, which is more secure and less prone to configuration drift.
+## Resolved Clarifications
 
-## Alternatives Considered
-
-- **Force Push**: Absolutely rejected. Would destroy history and bypass safety checks.
-- **Disable Commits**: Only release tags. Rejected because we want the version bump in `pyproject.toml` and the `CHANGELOG.md` to be persisted in the repo.
+- **Why is it failing?**: Non-fast-forward push rejection.
+- **Is PyPI publishing enabled?**: No, `upload_to_pypi` is `false` in `pyproject.toml`, and the GitHub Action step likely doesn't run because the previous step fails.
+- **How to fix?**: 
+    1. Fix the git push issue (likely by ensuring the checkout is correct or permissions are sufficient).
+    2. Ensure PyPI Trusted Publishers is set up.
+    3. Verify artifacts are created.

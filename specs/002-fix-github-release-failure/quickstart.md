@@ -1,24 +1,54 @@
-# Quickstart: Fix GitHub Release Failure
+# Quickstart: Publishing to PyPI via GitHub Actions
 
-This feature fixes the automated release pipeline by ensuring branch synchronization and correct token permissions.
+Follow these steps to successfully publish `django-mimsms` to PyPI.
 
-## Verification Steps
+## Step 1: Configure PyPI Trusted Publishers
 
-### 1. Token Setup (If using GH_TOKEN)
-Ensure your Personal Access Token (`GH_TOKEN`) has the **`repo`** scope (for Classic PAT) or **`Contents: Write`** (for Fine-grained PAT).
+1. Log in to your [PyPI account](https://pypi.org/manage/account/).
+2. Go to **Publishing** > **Add a new publisher**.
+3. Select **GitHub**.
+4. Fill in the details:
+   - **Owner**: `sharf-shawon`
+   - **Repository**: `django-mimsms`
+   - **Workflow name**: `release.yml`
+   - **Environment name**: `pypi` (optional, but recommended)
+5. Click **Add**.
 
-### 2. Trigger a Release
-1. Commit a change with a Conventional Commit message (e.g., `feat: add new feature`).
-2. Push to the `main` branch.
-3. Navigate to **Actions** in your GitHub repository.
-4. Monitor the **Release** workflow.
+## Step 2: Update GitHub Workflow Permissions
 
-### 3. Verify Success
-- The **Semantic Release and Publish** job should complete successfully.
-- A new tag should be created in the repository.
-- A new GitHub Release should be visible.
-- The version in `pyproject.toml` should be updated.
-- (If configured) The package should be published to PyPI.
+Ensure your `.github/workflows/release.yml` has the necessary permissions:
 
-## Troubleshooting
-If you still see "non-fast-forward", check if any other workflows or users are pushing to `main` concurrently. The `concurrency` configuration should prevent this.
+```yaml
+permissions:
+  id-token: write
+  contents: write
+```
+
+## Step 3: Fix "Non-Fast-Forward" Error
+
+The Semantic Release step might fail if the runner's branch is behind. Update the checkout step to ensure it's on the correct branch:
+
+```yaml
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main  # Explicitly use main branch
+```
+
+## Step 4: Verify `pyproject.toml`
+
+Ensure `python-semantic-release` is configured to build artifacts but not upload them (since we use a separate action):
+
+```toml
+[tool.semantic_release]
+upload_to_pypi = false
+upload_to_release = true
+build_command = "python -m build"
+```
+
+## Step 5: Trigger a Release
+
+1. Commit your changes.
+2. Ensure you use [Conventional Commits](https://www.conventionalcommits.org/) (e.g., `feat: something`, `fix: something`).
+3. Push to `main`.
+4. The workflow will automatically trigger, bump the version, create a tag, and publish to PyPI.
