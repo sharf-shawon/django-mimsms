@@ -16,6 +16,10 @@
 
 ### Fix
 
+* fix(release): resolve non-fast-forward error and configure OIDC for PyPI ([`9d90984`](https://github.com/sharf-shawon/django-mimsms/commit/9d90984deb61864119735fa804a543a0e9b1b485))
+
+* fix(release): resolve non-fast-forward error and configure OIDC for PyPI ([`e9ee31c`](https://github.com/sharf-shawon/django-mimsms/commit/e9ee31c55fbc88c928d85799ec3b24fce90a5c39))
+
 * fix(ci): resolve non-fast-forward and 404 errors in release workflow ([`e52b119`](https://github.com/sharf-shawon/django-mimsms/commit/e52b11988935d720e5e26cf2fe420fdfe7f9d0cb))
 
 ### Unknown
