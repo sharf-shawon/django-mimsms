@@ -4,6 +4,8 @@
 
 ### Feature
 
+* feat: add workflow_dispatch trigger to release workflow and update project URLs to point to the correct repository ([`cf6871a`](https://github.com/sharf-shawon/django-mimsms/commit/cf6871aaee94dfe9dfba0ddd62488adcf373941c))
+
 * feat: implement CI/CD pipeline with automatic versioning and deployment to PyPI ([`6481b9a`](https://github.com/sharf-shawon/django-mimsms/commit/6481b9adfb6a04797f14bcf349f460a3df2dc2d4))
 
 * feat: implement CI/CD pipeline with automatic versioning and deployment to PyPI ([`ae98ff6`](https://github.com/sharf-shawon/django-mimsms/commit/ae98ff69a6f8a4fa572b00484a94108daf133537))
